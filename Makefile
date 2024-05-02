@@ -9,13 +9,11 @@ LIBS=-lm -lpthread -lz
 ZOPFLI=zopfli/src/zopfli/
 ZOP=deflate.o blocksplitter.o tree.o lz77.o cache.o hash.o util.o squeeze.o katajainen.o symbols.o
 
-# use gcc and gmake on Solaris
+pigz:
+	cmake -B build
+	cmake --build build -j
 
-pigz: pigz.o yarn.o try.o $(ZOP)
-	$(CC) $(LDFLAGS) -o pigz pigz.o yarn.o try.o $(ZOP) $(LIBS)
-	ln -f pigz unpigz
-
-pigz.o: pigz.c yarn.h try.h $(ZOPFLI)deflate.h $(ZOPFLI)util.h
+pigz.o: pigz.c pigz_main.c yarn.h try.h $(ZOPFLI)deflate.h $(ZOPFLI)util.h
 
 yarn.o: yarn.c yarn.h
 
@@ -57,13 +55,13 @@ pigzj: pigzj.o yarn.o try.o
 	$(CC) $(LDFLAGS) -o pigzj pigzj.o yarn.o try.o $(LIBS)
 
 pigzj.o: pigz.c yarn.h try.h
-	$(CC) $(CFLAGS) -DNOZOPFLI -c -o pigzj.o pigz.c
+	$(CC) $(CFLAGS) -DNOZOPFLI -c -o pigzj.o pigz.c pigz_main.c 
 
 pigzt: pigzt.o yarnt.o try.o $(ZOP)
 	$(CC) $(LDFLAGS) -o pigzt pigzt.o yarnt.o try.o $(ZOP) $(LIBS)
 
 pigzt.o: pigz.c yarn.h try.h
-	$(CC) $(CFLAGS) -DPIGZ_DEBUG -g -c -o pigzt.o pigz.c
+	$(CC) $(CFLAGS) -DPIGZ_DEBUG -g -c -o pigzt.o pigz.c pigz_main.c 
 
 yarnt.o: yarn.c yarn.h
 	$(CC) $(CFLAGS) -DPIGZ_DEBUG -g -c -o yarnt.o yarn.c
@@ -72,7 +70,7 @@ pigzn: pigzn.o tryn.o $(ZOP)
 	$(CC) $(LDFLAGS) -o pigzn pigzn.o tryn.o $(ZOP) $(LIBS)
 
 pigzn.o: pigz.c try.h
-	$(CC) $(CFLAGS) -DPIGZ_DEBUG -DNOTHREAD -g -c -o pigzn.o pigz.c
+	$(CC) $(CFLAGS) -DPIGZ_DEBUG -DNOTHREAD -g -c -o pigzn.o pigz.c pigz_main.c 
 
 tryn.o: try.c try.h
 	$(CC) $(CFLAGS) -DPIGZ_DEBUG -DNOTHREAD -g -c -o tryn.o try.c
@@ -109,3 +107,4 @@ all: pigz pigzj pigzt pigzn docs
 
 clean:
 	@rm -f *.o pigz unpigz pigzj pigzn pigzt pigz.c.gz pigz.c.zz pigz.c.zip
+	@rm -rf build

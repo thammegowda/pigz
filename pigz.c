@@ -208,9 +208,11 @@
    2.8    19 Aug 2023  Fix version bug when compiling with zlib 1.3
                        Save a modification time only for regular files
                        Write all available uncompressed data on an error
+   2.9    2 May 2024   CMake support. Add Python bindings via pybind11
+                       Moved main function to pigz_main.c, added pigz.h header
  */
 
-#define VERSION "pigz 2.8"
+#define VERSION "pigz 2.9"
 
 /* To-do:
     - make source portable for Windows, VMS, etc. (see gzip source code)
@@ -438,6 +440,7 @@
 #endif
 
 #include "try.h"        // try, catch, always, throw, drop, punt, ball_t
+#include "pigz.h"
 
 // For local functions and globals.
 #define local static
@@ -4596,7 +4599,8 @@ local void cut_yarn(int err) {
 #endif
 
 // Process command line arguments.
-int main(int argc, char **argv) {
+// Update: renamed main as pigz_call for the sake of binding to python
+int pigz_call(int argc, char **argv) {
     int n;                          // general index
     int nop;                        // index before which "-" means stdin
     int done;                       // number of named files processed
