@@ -68,3 +68,44 @@ mkdir build && cd build
 cmake ..
 make -j
 ```
+
+## Build Python Bindings
+
+Python module is built automatically in the above make/cmake commands.
+By default, it builds python module for whatever python version is available in the $PATH, and the module is placed in `build/pigz.*.so`
+
+If you like to build for multiple Python versions, you have to make all the desired python versions availale in path.
+One way of making multiple python versions available in PATH without creating conflicts to the operating system utilities is
+using conda (or its C++ alternative mamba) and activate environments in stack mode.
+
+*Setup Mamba(first time only)*
+```bash
+which mamba || {
+   name=Miniforge3-$(uname)-$(uname -m).sh
+   wget "https://github.com/conda-forge/miniforge/releases/latest/download/$name" \
+      && bash $name -b -p ~/mambaforge && ~/mambaforge/bin/mamba init bash && rm $name
+}
+
+versions="$(echo 3.{12,11,10,9,8,7})"
+for version in $versions; do
+   echo "python $version"
+   mamba env list | grep -q "^py${version}" || mamba create -q -y -n py${version} python=${version}
+done
+```
+
+```bash
+# stack all environments
+for version in $versions; do mamba activate py${version} --stack; done
+# check if all python versions are available
+for version in $versions; do which python$version; done
+```
+
+
+## Run Tests for Python Module
+
+```bash
+cmake -B build
+cmake --build build
+pytest tests/
+
+```
