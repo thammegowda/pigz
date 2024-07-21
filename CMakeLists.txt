@@ -8,13 +8,27 @@ option(PYBIND "Build the python bindings" ON)
 # TODO: remove version specific compiler; I got internal error with gcc-11, so I switched to gcc-9
 set(CMAKE_C_COMPILER gcc)
 set(EXT_LIBS "")
-set(CMAKE_C_FLAGS "-O3 -Wall -Wextra -Wno-unknown-pragmas -Wcast-qual")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unknown-pragmas -Wcast-qual")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)   #https://stackoverflow.com/a/38297422/1506477
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++") #-static
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 #option(USE_CCACHE "Use ccache compiler cache (https://ccache.dev)" ON)
-set(CMAKE_BUILD_TYPE Release)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+  message(STATUS "No build type selected, default to Release")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  #set(CMAKE_C_FLAGS "-g")
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+  message(STATUS "Debug mode;")
+else()
+  message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}; Expected Release or Debug")
+endif()
 
 #if(USE_CCACHE)
 #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -C")
@@ -62,6 +76,7 @@ set_property(TARGET pigz_o PROPERTY OUTPUT_NAME pigz)
 # create it in the source directory
 set_target_properties(pigz_o PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(pigz_o ${EXT_LIBS})
+message(STATUS "EXT_LIBS: ${EXT_LIBS}")
 # copy pigz as upigz
 add_custom_command(TARGET pigz_o POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pigz_o> ${CMAKE_CURRENT_SOURCE_DIR}/unpigz
@@ -70,9 +85,6 @@ add_custom_command(TARGET pigz_o POST_BUILD
 # build the static library for pigz
 add_library(pigz STATIC ${PIGZ_SOURCES})
 target_link_libraries(pigz PUBLIC ${EXT_LIBS})
-
-#add_executable(tmpbin tmp.cpp ${PIGZ_SOURCES})   #_exe because we also want library pigz
-#target_link_libraries(tmpbin ${EXT_LIBS})
 
 ######## PYBIND
 if(PYBIND)

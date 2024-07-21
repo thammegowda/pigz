@@ -7,3 +7,5 @@
 build/
 .vscode/
 *.gz
+__pycache__/
+*.pyc
