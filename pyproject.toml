@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools >= 61.0", "pip >= 23.0"]   #NOTE: we had troubles with pip v22; it set name as UNKNOWN
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+# where = ["."]  # ["."] by default
+include = ["pigz*"]  # ["*"] by default
+namespaces = true  # true by default
+
+
+[project]
+name = "pigz"
+dynamic = ["version"]   # see [tool.setuptools.dynamic] below
+description = "pigz - python bindings to pigz (parallel gzip)"
+readme = "README.md"
+authors = [
+  { name = "Pigz Developers", email = "noreply@email.com" },
+]
+maintainers = [
+  { name = "Thamme Gowda", email = "tgowdan@gmail.com"},
+]
+requires-python = ">=3.7"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+]
+
+
+[project.urls]
+homepage = "https://github.com/thammegowda/pigz"
+documentation = "https://github.com/thammegowda/pigz"
+repository = "https://github.com/thammegowda/pigz"
+#changelog = ""
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+
+[tool.black]
+line-length = 110
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+include = '.*\.pyi?$'
+skip-string-normalization = true

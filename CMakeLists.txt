@@ -99,6 +99,7 @@ if(PYBIND)
 
   add_custom_target(pigz_py)
   foreach(PYTHON_VERSION ${PYTHON_VERSIONS})
+    # save the module file in the source directory
       py_add_module(pigz_py_${PYTHON_VERSION} pybind.cpp PYTHON_VERSION ${PYTHON_VERSION} PYTHON_MODULE pigz)
       target_link_libraries(pigz_py_${PYTHON_VERSION} PUBLIC pigz ${EXT_LIBS})
       add_dependencies(pigz_py pigz_py_${PYTHON_VERSION})

@@ -9,3 +9,6 @@ build/
 *.gz
 __pycache__/
 *.pyc
+
+dist/
+*.egg-info/

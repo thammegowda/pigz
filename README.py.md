@@ -48,23 +48,56 @@ The license from pigz.c is copied here:
   Mark Adler
   madler@alumni.caltech.edu
 
-## Build
+## Python Bindings
 
-### Using `make`
+Python Bindings are powered by Pybind11 and the source code is available at https://github.com/thammegowda/pigz.
 
+### Install pigz
 ```bash
-make pigz
+# Option 1: from PyPI
+pip install pigz
+
+# Option 2: from source code
+pip install git+https://github.com/thammegowda/pigz
 ```
 
-### Using `cmake`
+### Features
+1. Drop-in replacement for built in `gzip` (Aiming to be. Currently WIP)
+2. Handles context managers. Automatically opens and closes files when used correctly with `with` block
+
+
+### Limitations
+1. Python APIs are currently tailored for text mode
+2. Maybe unstable on some platforms. Tested on GNU/Linux for now.
+
+### Usage
+
+```python
+import pigz
+
+data = "Hello, World!\nThis is a test\nThis is the third line"
+out_path = 'test_iterator.gz'
+
+# How to write data
+with pigz.open(str(out_path), 'wt') as f:
+   f.write(data)
+
+# How to read data
+with pigz.open(str(out_path), 'rt') as f:
+   data2 = ''
+   for line in f:
+      data2 += line
+assert data == data2
+```
+
+See `tests/` directory for some more examples
+
+
+## Run Tests for Python Module
 
 ```bash
-# generate build files
 cmake -B build
 cmake --build build
+python -m pytest -vs tests/
 
-# Option 2:
-mkdir build && cd build
-cmake ..
-make -j
 ```

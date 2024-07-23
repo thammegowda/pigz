@@ -5,10 +5,13 @@ import sys
 import tempfile
 from pathlib import Path
 
-BUILD_DIR = Path(__file__).resolve().parent.parent / 'build'
-assert BUILD_DIR.is_dir(), f"BUILD_DIR::{BUILD_DIR} not found!"
-sys.path.append(str(BUILD_DIR))
-import pigz  # should be imported after sys.path is set
+try:
+    import pigz
+except ImportError:
+    BUILD_DIR = Path(__file__).resolve().parent.parent / 'build'
+    assert BUILD_DIR.is_dir(), f"BUILD_DIR::{BUILD_DIR} not found!"
+    sys.path.append(str(BUILD_DIR))
+    import pigz  # should be imported after sys.path is set
 
 
 tmpdir = Path(tempfile.mkdtemp())

@@ -236,7 +236,8 @@ public:
 
 PYBIND11_MODULE(pigz, m) {
     m.doc() = "pigz native API";
-
+    //m.def("__main__", &pigz_call, "Call pigz with arguments");
+    
     py::class_<GzFile>(m, "open", "Open a file with pigz")
         .def(py::init<std::string, std::string>())
         .def("__enter__",
