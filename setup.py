@@ -5,7 +5,7 @@ from setuptools.command.build_ext import build_ext as BuildExtBase
 import sys
 
 SOURCE_DIR = Path(__file__).parent.resolve()
-VERSION_SUFFIX = ".rc1"
+VERSION_SUFFIX = ".rc2"
 
 def get_version(cuda_version=None) -> str:
     vfile = SOURCE_DIR / 'pigz.c'

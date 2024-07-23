@@ -101,3 +101,35 @@ cmake --build build
 python -m pytest -vs tests/
 
 ```
+
+
+## Build Wheels for Release
+
+> NOTE: this for developers only
+
+### Many Linux Wheels
+
+Build produces `*-linux_x86_64.whl` wheels but they are not readily portable.
+We need to convert them into portable `manylinux*.whl` files, which requires building on older toolchain (glibc)
+
+Docs: https://github.com/pypa/manylinux
+
+```bash
+docker run -it -v $(pwd):/work quay.io/pypa/manylinux2014_x86_64 bash
+cd /work  #go to the dir where pigz code is mounted
+
+# build wheel for all supported python versions
+for v in 3.{8..13}; do p=$(dirname $(realpath $(which python$v))); echo "rm -rf build; PATH=$p:$PATH python$v -m build -w"; done | bash
+# python$v-config bin is required but it was unavailable in the default PATH, hence $p is added to enable python$v-config
+
+# wheels are stored here
+ls -lh dist/
+
+# convert wheels to manylinux wheels
+auditwheel repair dist/*.whl -w dist/wheelhouse
+
+
+# Upload
+# exit docker env
+twine upload -r pypi dist/wheelhouse/*.whl
+```

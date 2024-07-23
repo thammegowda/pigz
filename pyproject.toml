@@ -12,7 +12,7 @@ namespaces = true  # true by default
 name = "pigz"
 dynamic = ["version"]   # see [tool.setuptools.dynamic] below
 description = "pigz - python bindings to pigz (parallel gzip)"
-readme = "README.md"
+readme = "README.py.md"
 authors = [
   { name = "Pigz Developers", email = "noreply@email.com" },
 ]
