@@ -1,4 +1,6 @@
-pigz 2.8 (19 Aug 2022) by Mark Adler
+# `pigz`
+
+ 2.8 (19 Aug 2022) by Mark Adler
 
 pigz, which stands for Parallel Implementation of GZip, is a fully functional
 replacement for gzip that exploits multiple processors and multiple cores to
@@ -45,3 +47,24 @@ The license from pigz.c is copied here:
 
   Mark Adler
   madler@alumni.caltech.edu
+
+## Build
+
+### Using `make`
+
+```bash
+make pigz
+```
+
+### Using `cmake`
+
+```bash
+# generate build files
+cmake -B build
+cmake --build build
+
+# Option 2:
+mkdir build && cd build
+cmake ..
+make -j
+```

@@ -4,3 +4,11 @@
 /pigzj
 /pigzt
 /pigzn
+build/
+.vscode/
+*.gz
+__pycache__/
+*.pyc
+
+dist/
+*.egg-info/
