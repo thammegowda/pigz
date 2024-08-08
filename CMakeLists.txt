@@ -93,6 +93,9 @@ if(PYBIND)
   execute_process(COMMAND git submodule update --init --recursive --no-fetch
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+  # this needs to be set before including pybind11
+  set(PYBIND11_NOPYTHON On)
+
   include_directories(pybind11/include)
   add_subdirectory(pybind11)
   include(PythonModules)

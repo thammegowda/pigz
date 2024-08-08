@@ -34,9 +34,12 @@ macro(py_exec)
     endif()
 endmacro()
 
-set(PYBIND11_NOPYTHON On)
-# this wont work if pybind11 is git submodule
-#find_package(pybind11 REQUIRED)
+
+# NOTE: PYBIND11_NOPYTHON needs to be set before including pybind11
+#set(PYBIND11_NOPYTHON On)
+
+# since we have included pybind11 as git submodule, we dont need this here
+# find_package(pybind11 REQUIRED)
 
 ## =====================
 set(PYTHON_SEARCH_VERSIONS 3.7 3.8 3.9 3.10 3.11 3.12 3.13)
@@ -94,6 +97,15 @@ function(py_add_module NAME)
     add_library(${NAME} MODULE ${PARSE_UNPARSED_ARGUMENTS})
     pybind11_strip(${NAME})
     py_extension(${NAME} ${PYTHON_VERSION})
+    ######
+    ## print properties of python${PYTHON_VERSION}::headers and python${PYTHON_VERSION}::runtime
+    get_target_property(_tmp_ python${PYTHON_VERSION}::headers INTERFACE_INCLUDE_DIRECTORIES)
+    message(STATUS ">>> python${PYTHON_VERSION}::headers include dirs:: ${_tmp_}")
+    get_target_property(_tmp_ python${PYTHON_VERSION}::runtime INTERFACE_LINK_OPTIONS)
+    message(STATUS ">>> python${PYTHON_VERSION}::runtime link options:: ${_tmp_}")
+    ######
+
+    #######
     target_link_libraries(${NAME} PRIVATE pybind11::module pybind11::lto python${PYTHON_VERSION}::headers)
     set_target_properties(${NAME} PROPERTIES 
         OUTPUT_NAME ${PARSE_PYTHON_MODULE}
