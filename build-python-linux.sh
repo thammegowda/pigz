@@ -12,7 +12,8 @@ cd $MYDIR
 PY_VERSIONS="$(echo 3.{7..13})"
 PY_PLATFORM="manylinux2014_x86_64"
 
-
+# cleanup
+rm -rf dist dist-manylinux build
 
 # build wheel for all supported python versions
 for v in $PY_VERSIONS; do
