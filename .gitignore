@@ -5,6 +5,12 @@
 /pigzt
 /pigzn
 build/
+build-*/
+!*.sh
+tmp*
+dist/
+*.whl
+*.so
 .vscode/
 *.gz
 __pycache__/
