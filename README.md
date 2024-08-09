@@ -114,5 +114,5 @@ Manylinux wheels are produced under `dist-manylinux/`
 
 **Upload to PyPI**
 ```bash
-twine twine upload -r pypi dist-manylinux/pigz-*.whl
+twine upload -r pypi dist-manylinux/pigz-*.whl
 ```
